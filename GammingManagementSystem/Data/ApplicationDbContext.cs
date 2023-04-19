@@ -4,12 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GammingManagementSystem.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
-        public DbSet<ApplicationUser> applicationUsers { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Campaigns> Campaigns { get; set; }
+        public DbSet<ReferralUsers> ReferralUsers { get; set; }
+        public DbSet<Games> Games { get; set; }
+        public DbSet<Player> Players { get; set; }
     }
 }

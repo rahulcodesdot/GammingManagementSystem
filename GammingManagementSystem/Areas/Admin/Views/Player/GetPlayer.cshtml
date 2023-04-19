@@ -1,0 +1,76 @@
+﻿@model GammingManagementSystem.Models.Player
+@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add/Edit Player Details</h5>
+            <button type="button" class="close" data-dismiss="modal" onclick="CloseModal()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <fieldset>
+                <legend>Personal Details</legend>
+                <hr />
+                <div class="form-group">
+                    <label class="form-label">FirstName</label>
+                    <input type="hidden" class="form-control" name="Id" id="Id" value="@(Model != null ? Model.Id : null)" />
+                    <input class="form-control" name="FirstName" id="FirstName" value="@(Model != null ? Model.FirstName : null)" placeholder="First Name" />
+                    <span name="errorFirstName" class="text-danger"></span>
+
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    <input class="form-control" name="LastName" id="LastName" value="@(Model != null ? Model.LastName : null)" placeholder="Last Name" />
+                    <span name="errorLastName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date of Birth</label>
+                    <input class="form-control" type="datetime" name="DateOfBirth" id="DateOfBirth" placeholder="Date Of Birth" value="@(Model != null ? Model.DateOfBirth : null)" />
+                    <span name="errorDateOfBirth" class="text-danger"></span>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">UserName</label>
+                    <input class="form-control" name="UserName" id="UserName" placeholder="UserName" value="@(Model != null ? Model.UserName : null)" />
+                    <span name="errorUserName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Game Intrest In </label>
+                    @{
+                        foreach (var game in @ViewBag.GameList)
+                        {
+                            if (Model.GameInterested != null)
+                            {
+                                var arr = Model.GameInterested.Split(",");
+                                List<int> GameIdList = new List<int>();
+                                foreach (var gm in arr)
+                                {
+                                    GameIdList.Add(Convert.ToInt32(gm));
+                                }
+                                <p><input type="checkbox" class="gameCheckBox" onchange="ChangeGame(@game.Id)" @(GameIdList.Contains(game.Id) ? "checked" : "") value="@game.Id">&nbsp;&nbsp;  @game.GameName</p>
+                            }
+                            else
+                            {
+                                <p><input type="checkbox" class="gameCheckBox" onchange="ChangeGame(@game.Id)" value="@game.Id">&nbsp;&nbsp;  @game.GameName</p>
+                            }
+                        }
+                    }
+                    <input type="hidden" id="GameInterested" value="@(Model != null ? Model.GameInterested : null)" />
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="CloseModal()" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="btnSave" onclick="AddPlayer()">Add Player</button>
+            <button type="button" class="btn btn-primary" id="btnUpdate" onclick="UpdatePlayer()">Update Player</button>
+        </div>
+    </div>
+</div>

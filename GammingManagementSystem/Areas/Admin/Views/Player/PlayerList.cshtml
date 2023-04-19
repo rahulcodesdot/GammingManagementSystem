@@ -1,0 +1,49 @@
+﻿@model List<GammingManagementSystem.Dtos.PlayerDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+    int i = 1;
+}
+<div class="row">
+    <div class="col-md-6">
+        <h1>Player List</h1>
+    </div>
+    <div class="col-md-6">
+        <button id="btnAdd" class="float-right" onclick="CreatePlayer()">Create Player</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="PlayerTable" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th scope="col">Sr No.</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Reffaral Code</th>
+                    <th scope="col">Game Intrest In</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="table-active">
+                        <td scope="row">@(i)</td>
+                        <td scope="row">@item.FirstName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.ReferralCode</td>
+                        <td>@item.GameInterested</td>
+                        <th scope="col">
+                            <button id="btnEdit" class="btnEdit" onclick="EditPlayer('@item.Id')">Edit</button>
+                            <button id="btnDelete" class="btnDelete" onclick="DeletePlayer('@item.Id')">Delete</button>
+                        </th>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

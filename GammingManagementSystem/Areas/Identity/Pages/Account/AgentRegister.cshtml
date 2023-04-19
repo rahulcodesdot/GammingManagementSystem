@@ -1,0 +1,97 @@
+﻿@page
+@model AgentRegisterModel
+@{
+    ViewData["Title"] = "Agent Registration";
+
+    if (TempData["Success"] != null)
+    {
+        <script type="text/javascript">
+            alert('@TempData["Success"]');
+        </script>
+    }
+
+    if (TempData["Error"] != null)
+    {
+        <script type="text/javascript">
+            alert('@TempData["Error"]');
+        </script>
+    }
+}
+
+
+<div class="row">
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Registration
+                </button>
+            </h2>
+            <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <fieldset>
+                        <legend>Personal Details</legend>
+                        <hr />
+                        <div class="form-group row">
+                            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.FirstName" class="form-control" autocomplete="FirstName" aria-required="true" placeholder="First Name" />
+                            <label asp-for="Input.FirstName" class="form-label">FirstName</label>
+                            <span asp-validation-for="Input.FirstName" class="form-label text-muted"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.LastName" class="form-control" autocomplete="LastName" aria-required="true" placeholder="Last Name" />
+                            <label asp-for="Input.LastName" class="form-label"></label>
+                            <span asp-validation-for="Input.LastName" class="form-text text-muted"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.AccountName" class="form-control" autocomplete="AccountName" aria-required="true" placeholder="Account Name" />
+                            <label asp-for="Input.AccountName" class="form-label"></label>
+                            <span asp-validation-for="Input.AccountName" class="form-text text-muted"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="Email" aria-required="true" placeholder="Email" />
+                            <label asp-for="Input.Email" class="form-label">Email</label>
+                            <span asp-validation-for="Input.Email" class="form-text text-muted"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="PhoneNumber" aria-required="true" placeholder="Phone Number" />
+                            <label asp-for="Input.PhoneNumber" class="form-label">Contact</label>
+                            <span asp-validation-for="Input.PhoneNumber" class="form-text text-muted"></span>
+                        </div>
+                        <br />
+                        <legend>Address Details</legend>
+                        <hr />
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Address1" class="form-control" autocomplete="Address1" aria-required="true" placeholder="Address1" />
+                            <label asp-for="Input.Address1" class="form-label">Address-1</label>
+                            <span asp-validation-for="Input.Address1" class="form-label text-muted"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.City" class="form-control" autocomplete="City" aria-required="true" placeholder="City" />
+                            <label asp-for="Input.City" class="form-label">City</label>
+                            <span asp-validation-for="Input.City" class="form-label text-muted"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.State" class="form-control" autocomplete="City" aria-required="true" placeholder="State" />
+                            <label asp-for="Input.State" class="form-label">State</label>
+                            <span asp-validation-for="Input.State" class="form-label"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.ZipCode" class="form-control" autocomplete="ZipCode" aria-required="true" placeholder="ZipCode" />
+                            <label asp-for="Input.ZipCode" class="form-label">Zipcode</label>
+                            <span asp-validation-for="Input.ZipCode" class="form-label"></span>
+                        </div>
+                        <br />
+                        <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

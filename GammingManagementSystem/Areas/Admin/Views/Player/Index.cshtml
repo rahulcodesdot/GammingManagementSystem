@@ -1,0 +1,208 @@
+﻿@model List<GammingManagementSystem.Dtos.PlayerDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div id="PlayerList">
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modelPlayer">
+    <input type="hidden" id="formName" value="" />
+    <div id="PlayerForm">
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            GetPlayerList();
+        });
+
+        function GetPlayerList() {
+            debugger;
+            $.get("/admin/Player/PlayerList",
+                function (data) {
+                    debugger;
+                    $("#PlayerList").html(data);
+                    $("#PlayerTable").DataTable();
+                });
+        }
+
+        function EditPlayer(id) {
+            $.get("/admin/player/GetPlayer", { id: id },
+                function (data) {
+                    debugger;
+                    $("#PlayerForm").html(data);
+                    $("#modelPlayer").modal("show");
+                    //$("#PlayerForm").html(data);
+                    $("#btnSave").attr("hidden", "hidden");
+                    $("#btnUpdate").removeAttr("hidden");
+                });
+        }
+
+        function CreatePlayer() {
+            debugger;
+            $.get("/admin/player/GetPlayer", { id: 0 },
+                function (data) {
+                    debugger;
+                    $("#PlayerForm").html(data);
+
+                    $("#btnSave").removeAttr("hidden");
+                    $("#btnUpdate").attr("hidden", "hidden");
+
+                    $("#modelPlayer").modal("show");
+                });
+        }
+
+        function DeletePlayer(id) {
+            if (confirm("Are you sure?")) {
+                $.post("/admin/Player/DeletePlayer", { id: id },
+                    function (data) {
+                        alert("Player deleted successfully");
+                        GetPlayerList();
+                    });
+            }
+        }
+
+        function AddPlayer() {
+            if (IsValid()) {
+                var playerData = {};
+                playerData.Id = $("#Id").val();
+                playerData.FirstName = $("#FirstName").val();
+                playerData.LastName = $("#LastName").val();
+                playerData.DateOfBirth = $("#DateOfBirth").val();
+                playerData.UserName = $("#UserName").val();
+                playerData.GameInterested = $("#GameInterested").val();
+                console.log(playerData);
+                $.post("/admin/player/AddPlayer", { playerData: playerData },
+                    function (data) {
+                        if (data == true) {
+                            alert("player save successfully");
+                            GetPlayerList();
+                            clear();
+                            CloseModal();
+                        } else {
+                            alert("something is wrong.");
+                        }
+                    });
+            } else {
+                alert("please enter valid data.");
+            }
+        }
+
+        function UpdatePlayer() {
+            debugger;
+            if (IsValid()) {
+                var playerData = {};
+                playerData.Id = $("#Id").val();
+                playerData.FirstName = $("#FirstName").val();
+                playerData.LastName = $("#LastName").val();
+                playerData.DateOfBirth = $("#DateOfBirth").val();
+                playerData.UserName = $("#UserName").val();
+                playerData.GameInterested = $("#GameInterested").val();
+                console.log(playerData);
+                $.post("/admin/player/UpdatePlayer", { playerData: playerData },
+                    function (data) {
+                        debugger;
+                        if (data == true) {
+                            alert("player save successfully");
+                            GetPlayerList();
+                            clear();
+                            CloseModal();
+                        } else {
+                            alert("something is wrong.");
+                        }
+                    });
+            } else {
+                alert("please enter valid data.");
+            }
+        }
+
+        function clear() {
+            $("#Id").val(null);
+            $("#FirstName").val(null);
+            $("#LastName").val(null);
+            $("#DateOfBirth").val(null);
+            $("#UserName").val(null);
+        }
+
+        function CloseModal() {
+            $('#modelPlayer').modal('hide');
+        }
+        var checkedList = "";
+
+        function ChangeGame(gameId) {
+            debugger;
+            checkedList = $("#GameInterested").val();
+
+            if ($(".gameCheckBox").is(":checked")) {
+                if (checkedList == "") {
+                    checkedList = gameId;
+                }
+                else {
+                    checkedList += "," + gameId;
+                }
+            }
+            else {
+                var gameDT = $("#GameInterested").val();
+                var romoveVal = gameId;
+                var trainindIdArray = gameDT.split(',');
+                var i;
+                checkedList = "";
+                for (i = 0; i < trainindIdArray.length; ++i) {
+                    if (trainindIdArray[i] != romoveVal) {
+                        if (checkedList == "") {
+                            checkedList = trainindIdArray[i];
+                        }
+                        else {
+                            checkedList += "," + trainindIdArray[i];
+                        }
+                    }
+                }
+            }
+            $("#GameInterested").val(checkedList);
+        }
+
+        function IsValid() {
+            debugger;
+            $("#FirstName").val();
+            $("#LastName").val();
+            $("#DateOfBirth").val();
+            $("#UserName").val();
+            const error = {};
+
+            if ($("#FirstName").val() == null
+                || $("#FirstName").val() == undefined || $("#FirstName").val() == "") {
+                $("span[name='errorFirstName']").text("Please enter first-name");
+                error.FirstName = true;
+            }
+
+            if ($("#LastName").val() == null
+                || $("#LastName").val() == undefined || $("#LastName").val() == "") {
+                $("span[name='errorLastName']").text("Please enter Last-name");
+                error.LastName = true;
+            }
+
+            if ($("#DateOfBirth").val() == null
+                || $("#DateOfBirth").val() == undefined || $("#DateOfBirth").val() == "") {
+                $("span[name='errorDateOfBirth']").text("Please enter Date of Birth");
+                error.DateOfBirth = true;
+            }
+
+            if ($("#UserName").val() == null
+                || $("#UserName").val() == undefined || $("#UserName").val() == "") {
+                $("span[name='errorUserName']").text("Please enter UserName");
+                error.UserName = true;
+            }
+            if (error) {
+                return false;
+            }
+
+            return true;
+
+        }
+
+    </script>
+}

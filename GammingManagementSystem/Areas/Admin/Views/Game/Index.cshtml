@@ -1,0 +1,145 @@
+﻿@model List<GammingManagementSystem.Models.Games>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div id="GameList">
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modelGame">
+    <input type="hidden" id="formName" value="" />
+    <div id="GameForm">
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            GetGameList();
+        });
+
+        function GetGameList() {
+            debugger;
+            $.get("/admin/Game/GameList",
+                function (data) {
+                    $("#GameList").html(data);
+                    $('#GameTableList').DataTable();
+                });
+        }
+
+        function EditGame(id) {
+            debugger;
+            var editAgent = $("#formName").val("EditGame");
+            $.get("/admin/Game/GetGame", { id: id },
+                function (data) {
+                    debugger;
+                    $("#GameForm").html(data);
+                    $("#modelGame").modal("show");
+                    $("#GameForm").html(data);
+
+                    $("#btnUpdate").removeAttr("hidden");
+                    $("#btnSave").attr("hidden", "hidden");
+                });
+        }
+
+        function CreateGame() {
+            var createAgent = $("#formName").val("AddGame");
+            $.get("/admin/Game/GetGame", { id: null },
+                function (data) {
+                    debugger;
+                    $("#GameForm").html(data);
+
+                    $("#btnSave").removeAttr("hidden");
+                    $("#btnUpdate").attr("hidden", "hidden");
+
+                    $("#modelGame").modal("show");
+                });
+        }
+
+        function DeleteGame(id) {
+            if (confirm("Are you sure?")) {
+                $.post("/admin/Game/DeleteGame", { id: id },
+                    function (data) {
+                        alert("game deleted successfully");
+                        GetGameList();
+                    });
+            }
+        }
+
+        function AddGame() {
+            debugger;
+
+            var isTrue = checkValidation();
+            if (isTrue == true) {
+                var gameData = {};
+                gameData.Id = 0;
+                gameData.GameName = $("#GameName").val();
+                console.log(gameData);
+                $.post("/admin/Game/AddGame", { gameData: gameData },
+                    function (data) {
+                        if (data == true) {
+                            alert("game save successfully");
+                            GetGameList();
+                            clear();
+                            $("#modelGame").modal("hide");
+                        } else {
+                            alert("something is wrong.");
+                        }
+                    });
+            } else {
+                alert("Please enter data.");
+            }
+        }
+
+        function UpdateGame() {
+            debugger;
+            var isTrue = checkValidation();
+            if (isTrue == true) {
+                var gameData = {};
+                gameData.Id = $("#Id").val();
+                gameData.GameName = $("#GameName").val();
+
+                console.log(gameData);
+                $.post("/admin/Game/UpdateGame", { gameData: gameData },
+                    function (data) {
+                        debugger;
+                        if (data == true) {
+                            alert("Game save successfully");
+                            GetGameList();
+                            clear();
+                            $("#modelGame").modal("hide");
+                        } else {
+                            alert("something is wrong.");
+
+                        }
+                    });
+            }
+            else {
+                alert("Please enter data.")
+            }
+        }
+
+        function clear() {
+            $("#Id").val(null);
+            $("#GameName").val(null);
+        }
+
+        function checkValidation() {
+            var gameName = $("#GameName").val();
+            if (gameName == null ||
+                gameName == undefined ||
+                gameName == "") {
+                $("span[name='errorGameName']").text("Please enter game name");
+                return false;
+            }
+
+            return true;
+        }
+
+        function CloseModal() {
+            $('#modelGame').modal('hide');
+        }
+    </script>
+}

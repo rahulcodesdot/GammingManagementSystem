@@ -1,0 +1,49 @@
+﻿@page
+@model ReferralDetailsModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+<div class="row">
+    <div class="col-md-12">
+        @* <form>*@
+        <div class="row">
+            <div class="col-1">
+                URL :-
+            </div>
+            <div class="col-8">
+                <input type="text" asp-for="Input.URL" name="referralCode" id="referralCode" class="form-control" />
+            </div>
+            <div class="col-2">
+                <button id="update-profile-button" type="submit" onclick="myFunction()" class="w-100 btn btn-md btn-primary">Copy</button>
+            </div>
+        </div>
+        <br />
+        @*</form>*@
+        <div class="row text-center">
+            <div class="col-4">
+                <img src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(Model.Input.ReferralQRImage))" height="300" width="300" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function myFunction() {
+            // Get the text field
+            var copyText = document.getElementById("referralCode");
+
+            // Select the text field
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value);
+
+            // Alert the copied text
+            alert("Copied the text: " + copyText.value);
+        }
+    </script>
+}

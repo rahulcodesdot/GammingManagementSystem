@@ -1,0 +1,135 @@
+﻿@model List<GammingManagementSystem.Dtos.ApplicationUserDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div id="CustomerList">
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modelCustomer">
+    <input type="hidden" id="formName" value="" />
+    <div id="CustomerForm">
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            GetCustomerList();
+        });
+
+        function GetCustomerList() {
+            debugger;
+            $.get("/admin/Customer/CustomerList",
+                function (data) {
+                    $("#CustomerList").html(data);
+                    $("#CustomerTable").DataTable();
+                });
+        }
+
+        function EditAgent(id) {
+            $.get("/admin/Customer/GetCustomer", { id: id },
+                function (data) {
+                    debugger;
+                    $("#CustomerForm").html(data);
+                    $("#modelCustomer").modal("show");
+                    $("#CustomerForm").html(data);
+                    $("#btnSave").attr("hidden", "hidden");
+                    $("#btnUpdate").removeAttr("hidden", "hidden");
+                });
+        }
+
+        function CreateCustomer() {
+            $.get("/admin/Customer/GetCustomer", { id: null },
+                function (data) {
+                    debugger;
+                    $("#CustomerForm").html(data);
+
+                    $("#btnUpdate").attr("hidden");
+                    $("#btnSave").removeAttr("hidden", "hidden");
+
+                    $("#modelCustomer").modal("show");
+                });
+        }
+
+        function DeleteCustomer(id) {
+            if (confirm("Are you sure?")) {
+                $.post("/admin/Customer/DeleteCustomer", { id: id },
+                    function (data) {
+                        alert("customer deleted successfully");
+                        GetCustomerList();
+                    });
+            }
+        }
+
+        function AddCustomer() {
+            var agentData = {};
+            agentData.Id = $("#Id").val();
+            agentData.FirstName = $("#FirstName").val();
+            agentData.LastName = $("#LastName").val();
+            agentData.Email = $("#Email").val();
+            agentData.PhoneNumber = $("#PhoneNumber").val();
+            agentData.Address1 = $("#Address1").val();
+            agentData.City = $("#City").val();
+            agentData.State = $("#State").val();
+            agentData.ZipCode = $("#ZipCode").val();
+            console.log(agentData);
+            $.post("/admin/Customer/AddCustomer", { agentData: agentData },
+                function (data) {
+                    if (data == true) {
+                        alert("customer save successfully");
+                        GetCustomerList();
+                        clear();
+                    } else {
+                        alert("something is wrong.");
+                    }
+                });
+        }
+
+        function UpdateCustomer() {
+            debugger;
+            var agentData = {};
+            agentData.Id = $("#Id").val();
+            agentData.FirstName = $("#FirstName").val();
+            agentData.LastName = $("#LastName").val();
+            agentData.Email = $("#Email").val();
+            agentData.PhoneNumber = $("#PhoneNumber").val();
+            agentData.Address1 = $("#Address1").val();
+            agentData.City = $("#City").val();
+            agentData.State = $("#State").val();
+            agentData.ZipCode = $("#ZipCode").val();
+            console.log(agentData);
+            $.post("/admin/Customer/UpdateCustomer", { agentData: agentData },
+                function (data) {
+                    debugger;
+                    if (data == true) {
+                        alert("customer save successfully");
+                        GetAgentList();
+                        clear();
+                    } else {
+                        alert("something is wrong.");
+                    }
+                });
+        }
+
+        function clear() {
+            $("#Id").val(null);
+            $("#FirstName").val(null);
+            $("#LastName").val(null);
+            $("#AccountName").val(null);
+            $("#Email").val(null);
+            $("#PhoneNumber").val(null);
+            $("#Address1").val(null);
+            $("#City").val(null);
+            $("#State").val(null);
+            $("#ZipCode").val(null);
+        }
+
+        function CloseModal() {
+            $('#modelCustomer').modal('hide');
+        }
+
+    </script>
+}

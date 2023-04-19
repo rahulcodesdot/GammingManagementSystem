@@ -1,0 +1,38 @@
+﻿@page
+@model ReferralList
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Player Referral List</h1>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Referal Code</th>
+                    <th scope="col">Game Intrest In</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.applicationUsers)
+                {
+                    <tr class="table-active">
+                        <td scope="row">@item.FirstName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.ReferralCode</td>
+                        <td>@item.GameInterested</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

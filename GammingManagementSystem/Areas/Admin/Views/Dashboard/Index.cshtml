@@ -1,0 +1,224 @@
+﻿@model List<GammingManagementSystem.Dtos.ApplicationUserDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div id="AgentList">
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modelAgent">
+    <input type="hidden" id="formName" value="" />
+    <div id="AgentForm">
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            GetAgentList();
+        });
+
+        function GetAgentList() {
+            debugger;
+            $.get("/admin/Dashboard/AgentList",
+                function (data) {
+                    $("#AgentList").html(data);
+                    $("#AgentTable").DataTable();
+                });
+        }
+
+        function EditAgent(id) {
+            $.get("/admin/Dashboard/GetAgent", { id: id },
+                function (data) {
+                    debugger;
+                    $("#AgentForm").html(data);
+                    $("#modelAgent").modal("show");
+                    $("#AgentForm").html(data);
+                    $("#btnUpdate").removeAttr("hidden");
+                    $("#btnSave").attr("hidden", "hidden");
+                });
+        }
+
+        function CreateAgent() {
+            $.get("/admin/Dashboard/GetAgent", { id: null },
+                function (data) {
+                    debugger;
+                    $("#AgentForm").html(data);
+                    $("#btnSave").removeAttr("hidden");
+                    $("#btnUpdate").attr("hidden", "hidden");
+
+                    $("#modelAgent").modal("show");
+                });
+        }
+
+        function DeleteAgent(id) {
+            if (confirm("Are you sure?")) {
+                $.post("/admin/Dashboard/DeleteAgent", { id: id },
+                    function (data) {
+                        alert("agent deleted successfully");
+                        GetAgentList();
+                    });
+            }
+        }
+
+        function AddAgent() {
+            debugger;
+            var isTrue = checkValidation();
+            if (isTrue == true) {
+
+                var agentData = {};
+                agentData.Id = $("#Id").val();
+                agentData.FirstName = $("#FirstName").val();
+                agentData.LastName = $("#LastName").val();
+                agentData.AccountName = $("#AccountName").val();
+                agentData.Email = $("#Email").val();
+                agentData.PhoneNumber = $("#PhoneNumber").val();
+                agentData.Address1 = $("#Address1").val();
+                agentData.City = $("#City").val();
+                agentData.State = $("#State").val();
+                agentData.ZipCode = $("#ZipCode").val();
+                console.log(agentData);
+                $.post("/admin/Dashboard/AddAgent", { agentData: agentData },
+                    function (data) {
+                        if (data == true) {
+                            alert("agent save successfully");
+                            GetAgentList();
+                            clear();
+                        } else {
+                            alert("something is wrong.");
+                        }
+                    });
+            }
+            else {
+                alert("Please enter data.");
+            }
+        }
+
+        function UpdateAgent() {
+            debugger;
+            var isTrue = checkValidation();
+            if (isTrue == true) {
+                var agentData = {};
+                agentData.Id = $("#Id").val();
+                agentData.FirstName = $("#FirstName").val();
+                agentData.LastName = $("#LastName").val();
+                agentData.AccountName = $("#AccountName").val();
+                agentData.Email = $("#Email").val();
+                agentData.PhoneNumber = $("#PhoneNumber").val();
+                agentData.Address1 = $("#Address1").val();
+                agentData.City = $("#City").val();
+                agentData.State = $("#State").val();
+                agentData.ZipCode = $("#ZipCode").val();
+                console.log(agentData);
+                $.post("/admin/Dashboard/UpdateAgent", { agentData: agentData },
+                    function (data) {
+                        debugger;
+                        if (data == true) {
+                            alert("agent save successfully");
+                            GetAgentList();
+                            clear();
+                        } else {
+                            alert("something is wrong.");
+                        }
+                    });
+            }
+            else {
+                alert("Please enter data.");
+            }
+        }
+
+        function clear() {
+            $("#Id").val(null);
+            $("#FirstName").val(null);
+            $("#LastName").val(null);
+            $("#AccountName").val(null);
+            $("#Email").val(null);
+            $("#PhoneNumber").val(null);
+            $("#Address1").val(null);
+            $("#City").val(null);
+            $("#State").val(null);
+            $("#ZipCode").val(null);
+        }
+
+        function checkValidation() {
+            var FirstName = $("#FirstName").val();
+            var LastName = $("#LastName").val();
+            var AccountName = $("#AccountName").val();
+            var PhoneNumber = $("#PhoneNumber").val();
+            var Email = $("#Email").val();
+            var Address1 = $("#Address1").val();
+            var City = $("#City").val();
+            var State = $("#State").val();
+            var ZipCode = $("#ZipCode").val();
+            const error = {};
+
+            if (FirstName == null ||
+                FirstName == undefined ||
+                FirstName == "") {
+                $("span[name='errorFirstName']").text("Please enter first-name");
+                error.FirstName = true;
+            }
+            if (LastName == null ||
+                LastName == undefined ||
+                LastName == "") {
+                $("span[name='errorLastName']").text("Please enter Last-name");
+                error.LastName = true;
+            }
+            if (AccountName == null ||
+                AccountName == undefined ||
+                AccountName == "") {
+                $("span[name='errorAccountName']").text("Please enter Account Name");
+                error.AccountName = true;
+            }
+            if (Email == null ||
+                Email == undefined ||
+                Email == "") {
+                $("span[name='errorEmail']").text("Please enter Email");
+                error.Email = true;
+            }
+            if (PhoneNumber == null ||
+                PhoneNumber == undefined ||
+                PhoneNumber == "") {
+                $("span[name='errorPhoneNumber']").text("Please enter phone number");
+                error.PhoneNumber = true;
+            }
+            if (Address1 == null ||
+                Address1 == undefined ||
+                Address1 == "") {
+                $("span[name='errorAddress1']").text("Please enter address1");
+                error.Address1 = true;
+            }
+            if (City == null ||
+                City == undefined ||
+                City == "") {
+                $("span[name='errorCity']").text("Please enter city");
+                error.City = true;
+            }
+            if (State == null ||
+                State == undefined ||
+                State == "") {
+                $("span[name='errorState']").text("Please enter state");
+                error.State = true;
+            }
+            if (ZipCode == null ||
+                ZipCode == undefined ||
+                ZipCode == "") {
+                $("span[name='errorZipCode']").text("Please enter zipcode");
+                error.State = true;
+            }
+            if (error) {
+                return false;
+            }
+
+
+            return true;
+        }
+
+        function CloseModal() {
+            $('#modelAgent').modal('hide');
+        }
+
+    </script>
+}

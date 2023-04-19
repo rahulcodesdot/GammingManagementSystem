@@ -1,0 +1,33 @@
+﻿@model GammingManagementSystem.Models.Games
+@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add/Edit Game Details</h5>
+            <button type="button" class="close" onclick="CloseModal()" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <fieldset>
+                <legend>Game Details</legend>
+                <hr />
+                <div class="form-control">
+                    <input type="hidden" class="form-control" name="Id" id="Id" value="@(Model != null ? Model.Id : null)" />
+                    <label>Game Name</label>
+                    <input class="form-control" name="GameName" id="GameName" value="@(Model != null ? Model.GameName : null)" placeholder="Game Name" />
+                    <span name="errorGameName" class="text-danger"></span>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="CloseModal()" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="btnSave" onclick="AddGame()">Add changes</button>
+            <button type="button" class="btn btn-primary hide" id="btnUpdate" onclick="UpdateGame()">Update changes</button>
+        </div>
+    </div>
+</div>
